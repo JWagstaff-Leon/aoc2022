@@ -5,7 +5,7 @@
 
 
 
-class Scissors : public Throw
+class ScissorsThrow : public Throw
 {
     public:
         inline ThrowScore   getScore() override { return ThrowScore::Scissors; };

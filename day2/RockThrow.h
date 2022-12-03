@@ -5,7 +5,7 @@
 
 
 
-class Rock : public Throw
+class RockThrow : public Throw
 {
     public:
         inline ThrowScore   getScore() override { return ThrowScore::Rock; };

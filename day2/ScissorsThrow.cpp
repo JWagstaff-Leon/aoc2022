@@ -1,20 +1,20 @@
-#include "Paper.h"
+#include "ScissorsThrow.h"
 
 
 
-inline OutcomeScore Paper::getOutcomeScoreAgainst(ThrowType contestingThrowType)
+inline OutcomeScore ScissorsThrow::getOutcomeScoreAgainst(ThrowType contestingThrowType)
 {
     OutcomeScore result;
-    switch(contestingThrowType)
+    switch (contestingThrowType)
     {
         case ThrowType::Rock:
-            result = OutcomeScore::Win;
+            result = OutcomeScore::Loss;
             break;
         case ThrowType::Paper:
-            result = OutcomeScore::Draw;
+            result = OutcomeScore::Win;
             break;
         case ThrowType::Scissors:
-            result = OutcomeScore::Loss;
+            result = OutcomeScore::Draw;
             break;
         default:
             result = OutcomeScore::Loss;

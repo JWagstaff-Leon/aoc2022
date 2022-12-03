@@ -1,11 +1,11 @@
-#include "Rock.h"
+#include "RockThrow.h"
 
 
 
-inline OutcomeScore Rock::getOutcomeScoreAgainst(ThrowType contestingThrowType)
+inline OutcomeScore RockThrow::getOutcomeScoreAgainst(ThrowType contestingThrowType)
 {
     OutcomeScore result;
-    switch(contestingThrowType)
+    switch (contestingThrowType)
     {
         case ThrowType::Rock:
             result = OutcomeScore::Draw;

@@ -5,7 +5,7 @@
 
 
 
-class Paper : public Throw
+class PaperThrow : public Throw
 {
     public:
         inline ThrowScore   getScore() override { return ThrowScore::Paper; };
