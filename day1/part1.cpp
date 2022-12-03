@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
         calories = std::stod(input);
         currentElf.addCalories(calories);
     }
+    fin.close();
 
     double highestCalories = 0;
 
