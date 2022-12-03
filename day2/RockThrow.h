@@ -8,9 +8,9 @@
 class RockThrow : public Throw
 {
     public:
-        inline ThrowScore   getScore() override { return ThrowScore::Rock; };
+        inline ThrowScore   getScore() override { return ThrowScore::RockScore; };
         inline ThrowType    getType()  override { return ThrowType::Rock;  };
-        inline OutcomeScore getOutcomeScoreAgainst(ThrowType contestingThrowType) override;
+               OutcomeScore getOutcomeScoreAgainst(ThrowType contestingThrowType) override;
 };
 
 #endif

@@ -8,9 +8,9 @@
 class ScissorsThrow : public Throw
 {
     public:
-        inline ThrowScore   getScore() override { return ThrowScore::Scissors; };
+        inline ThrowScore   getScore() override { return ThrowScore::ScissorsScore; };
         inline ThrowType    getType()  override { return ThrowType::Scissors;  };
-        inline OutcomeScore getOutcomeScoreAgainst(ThrowType contestingThrowType) override;
+               OutcomeScore getOutcomeScoreAgainst(ThrowType contestingThrowType) override;
 };
 
 #endif

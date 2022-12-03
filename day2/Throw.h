@@ -5,7 +5,7 @@
 
 enum ThrowType
 {
-    None     = 0,
+    Invalid  = 0,
     Rock     = 1,
     Paper    = 2,
     Scissors = 3
@@ -15,10 +15,10 @@ enum ThrowType
 
 enum ThrowScore
 {
-    None     = 0,
-    Rock     = 1,
-    Paper    = 2,
-    Scissors = 3
+    NoScore       = 0,
+    RockScore     = 1,
+    PaperScore    = 2,
+    ScissorsScore = 3
 };
 
 
@@ -38,7 +38,6 @@ class Throw
         virtual ThrowScore   getScore()                                            = 0;
         virtual ThrowType    getType()                                             = 0;
         virtual OutcomeScore getOutcomeScoreAgainst(ThrowType contestingThrowType) = 0;
-        virtual              ~Throw();
 };
 
 #endif

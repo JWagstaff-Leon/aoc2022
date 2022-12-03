@@ -8,9 +8,9 @@
 class InvalidThrow : public Throw
 {
     public:
-        inline ThrowScore   getScore() override { return ThrowScore::None; };
-        inline ThrowType    getType()  override { return ThrowType::None;  };
-        inline OutcomeScore getOutcomeScoreAgainst(ThrowType contestingThrowType) override;
+        inline ThrowScore   getScore() override { return ThrowScore::NoScore; };
+        inline ThrowType    getType()  override { return ThrowType::Invalid;  };
+               OutcomeScore getOutcomeScoreAgainst(ThrowType contestingThrowType) override;
 };
 
 #endif

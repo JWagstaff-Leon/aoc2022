@@ -1,5 +1,9 @@
 #include <iostream>
 #include <fstream>
+#include <memory>
+
+#include "ThrowFactory.h"
+#include "Throw.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,5 +20,29 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    
+    int totalScore   = 0;
+    int currentScore = 0;
+    char input = '\0';
+    std::unique_ptr<Throw> enemyThrow;
+    std::unique_ptr<Throw> yourThrow;
+
+    while (!fin.eof())
+    {
+        input = fin.get();
+        std::cout << "input enemy " << input; //<< std::endl;
+        enemyThrow = ThrowFactory::makeThrowFromCode(input);
+        fin.ignore(1);
+        input = fin.get();
+        std::cout << " - input you " << input << std::endl;
+        yourThrow = ThrowFactory::makeThrowFromCode(input);
+        fin.ignore(1);
+
+
+        currentScore = yourThrow->getScore() + yourThrow->getOutcomeScoreAgainst(enemyThrow->getType());
+        // std::cout << "+score " << currentScore << std::endl;
+        // system("PAUSE");
+        totalScore += currentScore;
+    }
+
+    std::cout << "Answer: " << totalScore << std::endl;
 }

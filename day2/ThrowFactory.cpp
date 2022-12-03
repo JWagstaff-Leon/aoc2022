@@ -10,7 +10,7 @@
 
 
 
-std::unique_ptr<Throw> makeThrow(char throwCode)
+std::unique_ptr<Throw> ThrowFactory::makeThrowFromCode(char throwCode)
 {
     std::unique_ptr<Throw> madeThrow = std::make_unique<InvalidThrow>();
     switch (throwCode)

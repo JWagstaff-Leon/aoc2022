@@ -1,8 +1,8 @@
-#include "Rock.h"
+#include "InvalidThrow.h"
 
 
 
-inline OutcomeScore RockThrow::getOutcomeScoreAgainst(ThrowType contestingThrowType)
+inline OutcomeScore InvalidThrow::getOutcomeScoreAgainst(ThrowType contestingThrowType)
 {
     return OutcomeScore::Loss;
 };

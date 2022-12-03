@@ -8,7 +8,7 @@
 class ThrowFactory
 {
     public:
-        static std::unique_ptr<Throw> makeThrow(char throwCode);
+        static std::unique_ptr<Throw> makeThrowFromCode(char throwCode);
 
     private:
         ThrowFactory();

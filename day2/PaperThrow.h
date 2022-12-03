@@ -8,9 +8,9 @@
 class PaperThrow : public Throw
 {
     public:
-        inline ThrowScore   getScore() override { return ThrowScore::Paper; };
+        inline ThrowScore   getScore() override { return ThrowScore::PaperScore; };
         inline ThrowType    getType()  override { return ThrowType::Paper;  };
-        inline OutcomeScore getOutcomeScoreAgainst(ThrowType contestingThrowType) override;
+               OutcomeScore getOutcomeScoreAgainst(ThrowType contestingThrowType) override;
 };
 
 #endif
