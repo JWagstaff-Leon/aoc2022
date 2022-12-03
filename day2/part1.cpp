@@ -29,18 +29,13 @@ int main(int argc, char *argv[])
     while (!fin.eof())
     {
         input = fin.get();
-        std::cout << "input enemy " << input; //<< std::endl;
         enemyThrow = ThrowFactory::makeThrowFromCode(input);
         fin.ignore(1);
         input = fin.get();
-        std::cout << " - input you " << input << std::endl;
         yourThrow = ThrowFactory::makeThrowFromCode(input);
         fin.ignore(1);
 
-
         currentScore = yourThrow->getScore() + yourThrow->getOutcomeScoreAgainst(enemyThrow->getType());
-        // std::cout << "+score " << currentScore << std::endl;
-        // system("PAUSE");
         totalScore += currentScore;
     }
 
