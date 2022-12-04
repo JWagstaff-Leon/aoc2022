@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
         std::unique_ptr<Item> duplicateItem = unionCompartment.getOnlyItemOrNull();
         prioritySum += duplicateItem->getPriority();
     }
+    fin.close();
 
     std::cout << "Answer: " << prioritySum << std::endl;
 

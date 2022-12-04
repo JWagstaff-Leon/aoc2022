@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
 
         prioritySum += duplicateItem->getPriority();
     }
+    fin.close();
 
     std::cout << "Answer: " << prioritySum << std::endl;
 

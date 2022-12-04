@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
         currentScore = yourThrow->getScore() + yourThrow->getOutcomeScoreAgainst(enemyThrow->getType());
         totalScore += currentScore;
     }
+    fin.close();
 
     std::cout << "Answer: " << totalScore << std::endl;
 }
