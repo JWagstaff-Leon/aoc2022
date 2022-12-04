@@ -23,22 +23,23 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    std::string currentLine, firstCompartmentContents, secondCompartmentContents;
-    Compartment firstCompartment, secondCompartment, unionCompartment;
+    std::string currentLine;
+    Compartment firstElf, secondElf, thirdElf, unionCompartment;
     int prioritySum = 0;
 
     while (!fin.eof())    
     {
         std::getline(fin, currentLine);
+        firstElf  = CompartmentFactory::fromString(currentLine);
+        std::getline(fin, currentLine);
+        secondElf = CompartmentFactory::fromString(currentLine);
+        std::getline(fin, currentLine);
+        thirdElf  = CompartmentFactory::fromString(currentLine);
         
-        firstCompartmentContents  = currentLine.substr(0, currentLine.length() / 2);
-        secondCompartmentContents = currentLine.substr(currentLine.length() / 2, currentLine.length() / 2);
-
-        firstCompartment  = CompartmentFactory::fromString(firstCompartmentContents );
-        secondCompartment = CompartmentFactory::fromString(secondCompartmentContents);
-        unionCompartment = firstCompartment.junction(secondCompartment);
-        
+        unionCompartment = firstElf.junction(secondElf);
+        unionCompartment = unionCompartment.junction(thirdElf);
         std::unique_ptr<Item> duplicateItem = unionCompartment.getOnlyItemOrNull();
+
         prioritySum += duplicateItem->getPriority();
     }
 
