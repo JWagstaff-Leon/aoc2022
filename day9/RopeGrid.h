@@ -1,8 +1,8 @@
 #ifndef ROPE_GRID_H
 #define ROPE_GRID_H
 
-#include <tuple>
 #include <set>
+#include <vector>
 
 #include "Head.h"
 #include "Tail.h"
@@ -13,14 +13,14 @@
 class RopeGrid
 {
     public:
-        RopeGrid();
+        RopeGrid(int tails = 1);
         
                void doSteps(char direction, int amount);
         inline int  getVisitedPositions() { return visitedPositions_.size(); };
 
     private:
-        Head head_;
-        Tail tail_;
+        Head               head_;
+        std::vector<Tail>  tails_;
         std::set<Position> visitedPositions_;
 };
 

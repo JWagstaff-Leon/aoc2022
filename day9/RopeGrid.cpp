@@ -4,13 +4,17 @@
 
 
 
-RopeGrid::RopeGrid()
+RopeGrid::RopeGrid(int tails)
 {
-    visitedPositions_.insert(tail_.getPosition());
+    tails_.push_back(Tail());
+    for (int i = 1; i < tails; i++)
+    {
+        tails_.push_back(Tail());
+    }
+    visitedPositions_.insert(tails_[tails_.size() - 1].getPosition());
 };
 
 
-#include <iostream>
 void RopeGrid::doSteps(char direction, int amount)
 {
     for (int i = 0; i < amount; i++)
@@ -36,7 +40,11 @@ void RopeGrid::doSteps(char direction, int amount)
             default:
                 break;
         }
-        tail_.moveTowards(head_.getPosition());
-        visitedPositions_.insert(tail_.getPosition());
+        tails_[0].moveTowards(head_.getPosition());
+        for (int i = 1; i < tails_.size(); i++)
+        {
+            tails_[i].moveTowards(tails_[i - 1].getPosition());
+        }
+        visitedPositions_.insert(tails_[tails_.size() - 1].getPosition());
     }
 };
