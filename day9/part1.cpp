@@ -31,9 +31,7 @@ int main(int argc, char *argv[])
         fin.ignore(1);
         std::getline(fin, moveAmountInput);
         moveAmount = std::stoi(moveAmountInput);
-        // std::cout << "Read in " << moveDirection << " " << moveAmount << std::endl;
         ropeGrid.doSteps(moveDirection, moveAmount);
-        // system("PAUSE");
     }
     fin.close();
     

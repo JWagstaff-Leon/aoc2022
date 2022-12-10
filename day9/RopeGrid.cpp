@@ -13,7 +13,6 @@ RopeGrid::RopeGrid()
 #include <iostream>
 void RopeGrid::doSteps(char direction, int amount)
 {
-    // std::cout << "Doing " << amount << " steps in direction " << direction << std::endl;
     for (int i = 0; i < amount; i++)
     {
         switch(direction)
@@ -39,8 +38,5 @@ void RopeGrid::doSteps(char direction, int amount)
         }
         tail_.moveTowards(head_.getPosition());
         visitedPositions_.insert(tail_.getPosition());
-        // std::cout << "Head moved to (" << std::get<0>(head_.getPosition()) << ", " << std::get<1>(head_.getPosition()) << std::endl; 
-        // std::cout << "Tail moved to (" << std::get<0>(tail_.getPosition()) << ", " << std::get<1>(tail_.getPosition()) << std::endl; 
-        // system("PAUSE");
     }
 };
