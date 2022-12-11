@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     fin.close();
     
     Computer computer(instructions);
-    int answer = computer.runProgram();
+    int answer = computer.getSignalStrength();
 
     std::cout << "Answer: " << answer << std::endl;
     return 0;
