@@ -30,11 +30,11 @@ class Computer
 
 
 
-        int getSignalStrength() const;
-
+        int         getSignalStrength() const;
+        std::string getVisualOutput()   const;
 
     private:
-        void doStep() const;
+        void doCycle() const;
         std::vector<std::string> program_;
 
         mutable int instructionPointer_;
