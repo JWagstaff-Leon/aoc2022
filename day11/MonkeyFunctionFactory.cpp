@@ -3,11 +3,11 @@
 #include <string>
 #include <iostream>
 
-#include "Item.h"
+#include "bigint/bigint.h"
 
 
 
-std::function<Item(Item)> MonkeyFunctionFactory::makeLessWorriedFunction(std::string input)
+std::function<bigint(bigint)> MonkeyFunctionFactory::makeLessWorriedFunction(std::string input)
 {
     std::string lhs, opSymbol, rhs;
 
@@ -19,9 +19,9 @@ std::function<Item(Item)> MonkeyFunctionFactory::makeLessWorriedFunction(std::st
 
     rhs = input;
 
-    return [lhs, opSymbol, rhs] (Item old) -> Item
+    return [lhs, opSymbol, rhs] (bigint old) -> bigint
     {
-        Item left, right;
+        bigint left, right;
         if (lhs == "old")
         {
             left = old;
@@ -40,7 +40,7 @@ std::function<Item(Item)> MonkeyFunctionFactory::makeLessWorriedFunction(std::st
             right = std::stoull(rhs);
         }
 
-        Item result = 0;
+        bigint result = 0;
         switch (opSymbol[0])
         {
             case '+':
@@ -70,7 +70,7 @@ std::function<Item(Item)> MonkeyFunctionFactory::makeLessWorriedFunction(std::st
 
 
 
-std::function<Item(Item)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::string input)
+std::function<bigint(bigint)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::string input)
 {
     std::string lhs, opSymbol, rhs;
 
@@ -82,9 +82,9 @@ std::function<Item(Item)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::st
 
     rhs = input;
 
-    return [lhs, opSymbol, rhs] (Item old) -> Item
+    return [lhs, opSymbol, rhs] (bigint old) -> bigint
     {
-        Item left, right;
+        bigint left, right;
         if (lhs == "old")
         {
             left = old;
@@ -103,7 +103,7 @@ std::function<Item(Item)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::st
             right = std::stoull(rhs);
         }
 
-        Item result = 0;
+        bigint result = 0;
         switch (opSymbol[0])
         {
             case '+':
@@ -135,11 +135,11 @@ std::function<Item(Item)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::st
 
 
 
-std::function<bool(Item)> MonkeyFunctionFactory::makeTestFunction(std::string input)
+std::function<bool(bigint)> MonkeyFunctionFactory::makeTestFunction(std::string input)
 {
-    Item divisor = std::stoull(input);
-    return [divisor] (Item value) -> bool
+    bigint divisor = std::stoull(input);
+    return [divisor] (bigint value) -> bool
     {
-        return value % divisor == 0;
+        return ((value / divisor) * divisor) == value;
     };
 };

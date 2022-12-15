@@ -7,16 +7,16 @@
 
 #include "Monkey.h"
 #include "MonkeyFunctionFactory.h"
-#include "Item.h"
+#include "bigint/bigint.h" // big int from https://github.com/square1001/bigint-library
 
 
 const int ROUND_COUNT = 10000;
 
 
 
-std::queue<Item> getStartingItems(std::string itemsInput)
+std::queue<bigint> getStartingItems(std::string itemsInput)
 {
-    std::queue<Item> startingItems;
+    std::queue<bigint> startingItems;
     while (itemsInput.size() > 0)
     {
         int endOfNumber = itemsInput.find(',');
@@ -59,25 +59,25 @@ int main(int argc, char *argv[])
 
     while (!fin.eof())
     {
-        std::queue<Item> items;
+        std::queue<bigint> items;
         std::getline(fin, currentInput);      // Monkey #:
         std::getline(fin, currentInput, ':'); // Starting items:
         fin.ignore(1);                        // " "
 
         std::getline(fin, currentInput);      // #, #, ... #, #
-        std::queue<Item> startingItems = getStartingItems(currentInput);
+        std::queue<bigint> startingItems = getStartingItems(currentInput);
 
         std::getline(fin, currentInput, '='); // Operation: new =
         fin.ignore(1);                        // " "
 
         std::getline(fin, currentInput);      // ___ _ ___
-        std::function<Item(Item)> worryFunction = MonkeyFunctionFactory::makeMoreWorriedFunction(currentInput);
+        std::function<bigint(bigint)> worryFunction = MonkeyFunctionFactory::makeMoreWorriedFunction(currentInput);
 
         std::getline(fin, currentInput, 'y'); // Test: divisible by
         fin.ignore(1);                        // " "
 
         std::getline(fin, currentInput);      // #
-        std::function<bool(Item)> testFunction = MonkeyFunctionFactory::makeTestFunction(currentInput);
+        std::function<bool(bigint)> testFunction = MonkeyFunctionFactory::makeTestFunction(currentInput);
 
         std::getline(fin, currentInput, 'y'); // If true: throw to monkey
         fin.ignore(1);                        // " "
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < ROUND_COUNT; i++)
     {
-        // std::cout << "Starting round: " << i + 1 << "...\n";
+        std::cout << "Starting round: " << i + 1 << "...\n";
         for (int j = 0; j < monkies.size(); j++)
         {
             monkies[j].processItems();

@@ -3,11 +3,11 @@
 #include <queue>
 #include <functional>
 
-#include "Item.h"
+#include "bigint/bigint.h"
 
 
 
-Monkey::Monkey(std::queue<Item> items, std::function<Item(Item)> worryFunction, std::function<bool(Item)> testFunction)
+Monkey::Monkey(std::queue<bigint> items, std::function<bigint(bigint)> worryFunction, std::function<bool(bigint)> testFunction)
 : items_(items),
   worryFunction_(worryFunction),
   testFunction_(testFunction),
@@ -20,7 +20,7 @@ void Monkey::processItems()
 {
     while (!items_.empty())
     {
-        Item worry = worryFunction_(items_.front());
+        bigint worry = worryFunction_(items_.front());
         
         Monkey* target;
         if (testFunction_(worry))
@@ -54,14 +54,14 @@ void Monkey::setFalseCaseTarget(Monkey* target)
 
 
 
-void Monkey::acceptItem(Item item)
+void Monkey::acceptItem(bigint item)
 {
     items_.push(item);
 };
 
 
 
-void Monkey::throwItemTo(Item item, Monkey* target)
+void Monkey::throwItemTo(bigint item, Monkey* target)
 {
     target->acceptItem(item);
 };
