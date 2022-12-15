@@ -4,27 +4,29 @@
 #include <queue>
 #include <functional>
 
+#include "Item.h"
+
 class Monkey
 {
     public:
-        Monkey(std::queue<int> items, std::function<int(int)> worryFunction, std::function<bool(int)> testFunction);
+        Monkey(std::queue<Item> items, std::function<Item(Item)> worryFunction, std::function<bool(Item)> testFunction);
 
         void processItems();
         void setTrueCaseTarget (Monkey* target);
         void setFalseCaseTarget(Monkey* target);
 
-        void acceptItem        (int item);
+        void acceptItem (Item item);
 
         inline int getProcessedItemsCount() { return itemsProcessed_; };
 
     private:
-        std::queue<int>          items_;
-        std::function<int(int)>  worryFunction_;
-        std::function<bool(int)> testFunction_;
-        Monkey*                  trueCaseTarget_;
-        Monkey*                  falseCaseTarget_;
+        std::queue<Item>          items_;
+        std::function<Item(Item)> worryFunction_;
+        std::function<bool(Item)> testFunction_;
+        Monkey*                   trueCaseTarget_;
+        Monkey*                   falseCaseTarget_;
 
-        void throwItemTo (int item, Monkey* target);
+        void throwItemTo (Item item, Monkey* target);
 
         int itemsProcessed_;
 };

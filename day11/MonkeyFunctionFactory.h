@@ -4,14 +4,16 @@
 #include <functional>
 #include <string>
 
+#include "Item.h"
+
 
 
 class MonkeyFunctionFactory
 {
     public:
-        static std::function<int(int)>                                makeLessWorriedFunction(std::string input);
-        static std::function<unsigned long long(unsigned long long)>  makeMoreWorriedFunction(std::string input);
-        static std::function<bool(int)>                               makeTestFunction       (std::string input);
+        static std::function<Item(Item)> makeLessWorriedFunction(std::string input);
+        static std::function<Item(Item)> makeMoreWorriedFunction(std::string input);
+        static std::function<bool(Item)> makeTestFunction       (std::string input);
 
     private:
         MonkeyFunctionFactory();

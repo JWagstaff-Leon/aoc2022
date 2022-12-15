@@ -3,9 +3,11 @@
 #include <queue>
 #include <functional>
 
+#include "Item.h"
 
 
-Monkey::Monkey(std::queue<int> items, std::function<int(int)> worryFunction, std::function<bool(int)> testFunction)
+
+Monkey::Monkey(std::queue<Item> items, std::function<Item(Item)> worryFunction, std::function<bool(Item)> testFunction)
 : items_(items),
   worryFunction_(worryFunction),
   testFunction_(testFunction),
@@ -14,13 +16,11 @@ Monkey::Monkey(std::queue<int> items, std::function<int(int)> worryFunction, std
   itemsProcessed_(0)
 {};
 
-
-#include <iostream>
 void Monkey::processItems()
 {
     while (!items_.empty())
     {
-        int worry = worryFunction_(items_.front());
+        Item worry = worryFunction_(items_.front());
         
         Monkey* target;
         if (testFunction_(worry))
@@ -35,7 +35,6 @@ void Monkey::processItems()
 
         items_.pop();
         itemsProcessed_++;
-        std::cout << "Items processed is now " << itemsProcessed_ << "\n";
     }
 };
 
@@ -55,14 +54,14 @@ void Monkey::setFalseCaseTarget(Monkey* target)
 
 
 
-void Monkey::acceptItem(int item)
+void Monkey::acceptItem(Item item)
 {
     items_.push(item);
 };
 
 
 
-void Monkey::throwItemTo(int item, Monkey* target)
+void Monkey::throwItemTo(Item item, Monkey* target)
 {
     target->acceptItem(item);
 };

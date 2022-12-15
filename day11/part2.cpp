@@ -10,7 +10,7 @@
 #include "Item.h"
 
 
-const int ROUND_COUNT = 20;
+const int ROUND_COUNT = 10000;
 
 
 
@@ -28,7 +28,7 @@ std::queue<Item> getStartingItems(std::string itemsInput)
         else
         {
             std::string nextNumber = itemsInput.substr(0, endOfNumber);
-            startingItems.push(std::stoi(nextNumber));
+            startingItems.push(std::stoull(nextNumber));
             itemsInput.erase(0, endOfNumber + 1);
         }
     }
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
         fin.ignore(1);                        // " "
 
         std::getline(fin, currentInput);      // ___ _ ___
-        std::function<Item(Item)> worryFunction = MonkeyFunctionFactory::makeLessWorriedFunction(currentInput);
+        std::function<Item(Item)> worryFunction = MonkeyFunctionFactory::makeMoreWorriedFunction(currentInput);
 
         std::getline(fin, currentInput, 'y'); // Test: divisible by
         fin.ignore(1);                        // " "
@@ -104,18 +104,19 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < ROUND_COUNT; i++)
     {
+        // std::cout << "Starting round: " << i + 1 << "...\n";
         for (int j = 0; j < monkies.size(); j++)
         {
             monkies[j].processItems();
         }
     }
 
-    int highest       = -1;
-    int secondHighest = -1;
+    unsigned long long highest       = 0;
+    unsigned long long secondHighest = 0;
 
     for (int i = 0; i < monkies.size(); i++)
     {
-        int monkeyScore = monkies[i].getProcessedItemsCount();
+        unsigned long long monkeyScore = monkies[i].getProcessedItemsCount();
         if (monkeyScore > highest)
         {
             secondHighest = highest;
@@ -127,7 +128,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    int answer = highest * secondHighest;
-    std::cout << answer << "\n";
+    unsigned long long answer = highest * secondHighest;
+    std::cout << "Answer: " << highest << "*" << secondHighest << " " << answer << "\n";
     return 0;
 };

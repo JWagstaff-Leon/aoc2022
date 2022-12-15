@@ -3,9 +3,11 @@
 #include <string>
 #include <iostream>
 
+#include "Item.h"
 
 
-std::function<int(int)> MonkeyFunctionFactory::makeLessWorriedFunction(std::string input)
+
+std::function<Item(Item)> MonkeyFunctionFactory::makeLessWorriedFunction(std::string input)
 {
     std::string lhs, opSymbol, rhs;
 
@@ -17,16 +19,16 @@ std::function<int(int)> MonkeyFunctionFactory::makeLessWorriedFunction(std::stri
 
     rhs = input;
 
-    return [lhs, opSymbol, rhs] (int old) -> int
+    return [lhs, opSymbol, rhs] (Item old) -> Item
     {
-        int left, right;
+        Item left, right;
         if (lhs == "old")
         {
             left = old;
         }
         else
         {
-            left = std::stoi(lhs);
+            left = std::stoull(lhs);
         }
 
         if (rhs == "old")
@@ -35,10 +37,10 @@ std::function<int(int)> MonkeyFunctionFactory::makeLessWorriedFunction(std::stri
         }
         else
         {
-            right = std::stoi(rhs);
+            right = std::stoull(rhs);
         }
 
-        int result = 0;
+        Item result = 0;
         switch (opSymbol[0])
         {
             case '+':
@@ -68,7 +70,7 @@ std::function<int(int)> MonkeyFunctionFactory::makeLessWorriedFunction(std::stri
 
 
 
-std::function<unsigned long long(unsigned long long)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::string input)
+std::function<Item(Item)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::string input)
 {
     std::string lhs, opSymbol, rhs;
 
@@ -80,16 +82,16 @@ std::function<unsigned long long(unsigned long long)> MonkeyFunctionFactory::mak
 
     rhs = input;
 
-    return [lhs, opSymbol, rhs] (unsigned long long old) -> unsigned long long
+    return [lhs, opSymbol, rhs] (Item old) -> Item
     {
-        unsigned long long left, right;
+        Item left, right;
         if (lhs == "old")
         {
             left = old;
         }
         else
         {
-            left = std::stoi(lhs);
+            left = std::stoull(lhs);
         }
 
         if (rhs == "old")
@@ -98,10 +100,10 @@ std::function<unsigned long long(unsigned long long)> MonkeyFunctionFactory::mak
         }
         else
         {
-            right = std::stoi(rhs);
+            right = std::stoull(rhs);
         }
 
-        int result = 0;
+        Item result = 0;
         switch (opSymbol[0])
         {
             case '+':
@@ -123,17 +125,20 @@ std::function<unsigned long long(unsigned long long)> MonkeyFunctionFactory::mak
             default:
                 break;
         }
-
+        if (lhs == "old" && result < left || rhs == "old" && result < right)
+        {
+            std::cout << "Overflow...\n" << left << opSymbol << right << "=" << result << "\n";
+        }
         return result;
     };
 };
 
 
 
-std::function<bool(int)> MonkeyFunctionFactory::makeTestFunction(std::string input)
+std::function<bool(Item)> MonkeyFunctionFactory::makeTestFunction(std::string input)
 {
-    int divisor = std::stoi(input);
-    return [divisor] (int value) -> bool
+    Item divisor = std::stoull(input);
+    return [divisor] (Item value) -> bool
     {
         return value % divisor == 0;
     };
