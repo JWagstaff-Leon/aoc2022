@@ -4,7 +4,6 @@
 #include <functional>
 
 #include "Item.h"
-// #include <iostream>
 
 
 
@@ -19,28 +18,23 @@ Monkey::Monkey(std::queue<Item> items, std::function<Item(Item)> worryFunction, 
 
 void Monkey::processItems()
 {
-    // std::cout << "Entering process items for " << items_.size() << " items...\n";
     while (!items_.empty())
     {
-        // std::cout << "Next item " << items_.front() << "...\n";
         Item worry = worryFunction_(items_.front());
         
         Monkey* target;
         if (testFunction_(worry))
         {
-            // std::cout << "True case...\n";
             target = trueCaseTarget_;
         }
         else
         {
-            // std::cout << "False case...\n";
             target = falseCaseTarget_;
         }
         throwItemTo(worry, target);
 
         items_.pop();
         itemsProcessed_++;
-        // std::cout << "Items processed is now " << itemsProcessed_ << "...\n";
     }
 };
 

@@ -10,8 +10,7 @@ class Item
 {
     public:
         Item();
-        Item(int startingNumber);
-        Item(const std::vector<int> &reverseTenThousandPlaces);
+        Item(unsigned long long startingNumber);
         Item(const Item& sourceItem);
 
         Item operator+ (const Item& rhs) const;
@@ -27,7 +26,8 @@ class Item
         friend std::ostream& operator<< (std::ostream& sout, const Item& out);
 
     private:
-        std::vector<int> reverseTenThousandsPlaces_;
+        unsigned long long value_;
+        static const int MAX_VALUE = 9699690;
 };
 
 #endif

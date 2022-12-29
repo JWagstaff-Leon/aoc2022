@@ -104,15 +104,9 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < ROUND_COUNT; i++)
     {
-        // if (i % 250 == 0)
-        // {
-            std::cout << "Starting round: " << i + 1 << "...\n";
-        // }
         for (int j = 0; j < monkies.size(); j++)
         {
-            // std::cout << "Starting monkey: " << j << "...\n";
             monkies[j].processItems();
-            // getchar();
         }
     }
 
@@ -134,6 +128,6 @@ int main(int argc, char *argv[])
     }
 
     unsigned long long answer = highest * secondHighest;
-    std::cout << "Answer: " << highest << "*" << secondHighest << " " << answer << "\n";
+    std::cout << "Answer: " << answer << "\n";
     return 0;
 };

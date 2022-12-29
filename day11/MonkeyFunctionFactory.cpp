@@ -76,7 +76,6 @@ std::function<Item(Item)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::st
 
     return [lhs, opSymbol, rhs] (Item old) -> Item
     {
-        // std::cout << "Entering worry function...\n";
         Item left, right;
         if (lhs == "old")
         {
@@ -96,28 +95,20 @@ std::function<Item(Item)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::st
             right = std::stoi(rhs);
         }
 
-        // std::cout << "Halfway there...\n";
         Item result = 0;
         switch (opSymbol[0])
         {
             case '+':
-                // std::cout << "Plus case...\n";
                 result = left + right;
                 break;
 
             case '*':
-                // std::cout << "Times case...\n";
                 result = left * right;
                 break;
             
             default:
                 break;
         }
-        // if (lhs == "old" && result < left || rhs == "old" && result < right)
-        // {
-            // std::cout << "Overflow...\n" << left << opSymbol << right << "=" << result << "\n";
-        // }
-        // std::cout << "Returning now...\n";
         return result;
     };
 };
