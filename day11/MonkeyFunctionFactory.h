@@ -4,16 +4,16 @@
 #include <functional>
 #include <string>
 
-#include "bigint/bigint.h"
+#include "Item.h"
 
 
 
 class MonkeyFunctionFactory
 {
     public:
-        static std::function<bigint(bigint)> makeLessWorriedFunction(std::string input);
-        static std::function<bigint(bigint)> makeMoreWorriedFunction(std::string input);
-        static std::function<bool(bigint)>   makeTestFunction       (std::string input);
+        static std::function<Item(Item)> makeLessWorriedFunction(std::string input);
+        static std::function<Item(Item)> makeMoreWorriedFunction(std::string input);
+        static std::function<bool(Item)> makeTestFunction       (std::string input);
 
     private:
         MonkeyFunctionFactory();

@@ -7,16 +7,16 @@
 
 #include "Monkey.h"
 #include "MonkeyFunctionFactory.h"
-#include "bigint/bigint.h"
+#include "Item.h"
 
 
 const int ROUND_COUNT = 20;
 
 
 
-std::queue<bigint> getStartingItems(std::string itemsInput)
+std::queue<Item> getStartingItems(std::string itemsInput)
 {
-    std::queue<bigint> startingItems;
+    std::queue<Item> startingItems;
     while (itemsInput.size() > 0)
     {
         int endOfNumber = itemsInput.find(',');
@@ -59,25 +59,25 @@ int main(int argc, char *argv[])
 
     while (!fin.eof())
     {
-        std::queue<bigint> items;
+        std::queue<Item> items;
         std::getline(fin, currentInput);      // Monkey #:
         std::getline(fin, currentInput, ':'); // Starting items:
         fin.ignore(1);                        // " "
 
         std::getline(fin, currentInput);      // #, #, ... #, #
-        std::queue<bigint> startingItems = getStartingItems(currentInput);
+        std::queue<Item> startingItems = getStartingItems(currentInput);
 
         std::getline(fin, currentInput, '='); // Operation: new =
         fin.ignore(1);                        // " "
 
         std::getline(fin, currentInput);      // ___ _ ___
-        std::function<bigint(bigint)> worryFunction = MonkeyFunctionFactory::makeLessWorriedFunction(currentInput);
+        std::function<Item(Item)> worryFunction = MonkeyFunctionFactory::makeLessWorriedFunction(currentInput);
 
         std::getline(fin, currentInput, 'y'); // Test: divisible by
         fin.ignore(1);                        // " "
 
         std::getline(fin, currentInput);      // #
-        std::function<bool(bigint)> testFunction = MonkeyFunctionFactory::makeTestFunction(currentInput);
+        std::function<bool(Item)> testFunction = MonkeyFunctionFactory::makeTestFunction(currentInput);
 
         std::getline(fin, currentInput, 'y'); // If true: throw to monkey
         fin.ignore(1);                        // " "

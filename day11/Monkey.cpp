@@ -3,11 +3,12 @@
 #include <queue>
 #include <functional>
 
-#include "bigint/bigint.h"
+#include "Item.h"
+// #include <iostream>
 
 
 
-Monkey::Monkey(std::queue<bigint> items, std::function<bigint(bigint)> worryFunction, std::function<bool(bigint)> testFunction)
+Monkey::Monkey(std::queue<Item> items, std::function<Item(Item)> worryFunction, std::function<bool(Item)> testFunction)
 : items_(items),
   worryFunction_(worryFunction),
   testFunction_(testFunction),
@@ -18,23 +19,28 @@ Monkey::Monkey(std::queue<bigint> items, std::function<bigint(bigint)> worryFunc
 
 void Monkey::processItems()
 {
+    // std::cout << "Entering process items for " << items_.size() << " items...\n";
     while (!items_.empty())
     {
-        bigint worry = worryFunction_(items_.front());
+        // std::cout << "Next item " << items_.front() << "...\n";
+        Item worry = worryFunction_(items_.front());
         
         Monkey* target;
         if (testFunction_(worry))
         {
+            // std::cout << "True case...\n";
             target = trueCaseTarget_;
         }
         else
         {
+            // std::cout << "False case...\n";
             target = falseCaseTarget_;
         }
         throwItemTo(worry, target);
 
         items_.pop();
         itemsProcessed_++;
+        // std::cout << "Items processed is now " << itemsProcessed_ << "...\n";
     }
 };
 
@@ -54,14 +60,14 @@ void Monkey::setFalseCaseTarget(Monkey* target)
 
 
 
-void Monkey::acceptItem(bigint item)
+void Monkey::acceptItem(Item item)
 {
     items_.push(item);
 };
 
 
 
-void Monkey::throwItemTo(bigint item, Monkey* target)
+void Monkey::throwItemTo(Item item, Monkey* target)
 {
     target->acceptItem(item);
 };

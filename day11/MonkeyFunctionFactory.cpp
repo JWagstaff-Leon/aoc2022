@@ -1,13 +1,13 @@
 #include "MonkeyFunctionFactory.h"
 
 #include <string>
-#include <iostream>
+// #include <iostream>
 
-#include "bigint/bigint.h"
+#include "Item.h"
 
 
 
-std::function<bigint(bigint)> MonkeyFunctionFactory::makeLessWorriedFunction(std::string input)
+std::function<Item(Item)> MonkeyFunctionFactory::makeLessWorriedFunction(std::string input)
 {
     std::string lhs, opSymbol, rhs;
 
@@ -19,16 +19,16 @@ std::function<bigint(bigint)> MonkeyFunctionFactory::makeLessWorriedFunction(std
 
     rhs = input;
 
-    return [lhs, opSymbol, rhs] (bigint old) -> bigint
+    return [lhs, opSymbol, rhs] (Item old) -> Item
     {
-        bigint left, right;
+        Item left, right;
         if (lhs == "old")
         {
             left = old;
         }
         else
         {
-            left = std::stoull(lhs);
+            left = std::stoi(lhs);
         }
 
         if (rhs == "old")
@@ -37,40 +37,32 @@ std::function<bigint(bigint)> MonkeyFunctionFactory::makeLessWorriedFunction(std
         }
         else
         {
-            right = std::stoull(rhs);
+            right = std::stoi(rhs);
         }
 
-        bigint result = 0;
+        Item result = 0;
         switch (opSymbol[0])
         {
             case '+':
                 result = left + right;
                 break;
 
-            case '-':
-                result = left - right;
-                break;
-
             case '*':
                 result = left * right;
-                break;
-
-            case '/':
-                result = left / right;
                 break;
             
             default:
                 break;
         }
 
-        result /= 3;
+        result = result / 3;
         return result;
     };
 };
 
 
 
-std::function<bigint(bigint)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::string input)
+std::function<Item(Item)> MonkeyFunctionFactory::makeMoreWorriedFunction(std::string input)
 {
     std::string lhs, opSymbol, rhs;
 
@@ -82,16 +74,17 @@ std::function<bigint(bigint)> MonkeyFunctionFactory::makeMoreWorriedFunction(std
 
     rhs = input;
 
-    return [lhs, opSymbol, rhs] (bigint old) -> bigint
+    return [lhs, opSymbol, rhs] (Item old) -> Item
     {
-        bigint left, right;
+        // std::cout << "Entering worry function...\n";
+        Item left, right;
         if (lhs == "old")
         {
             left = old;
         }
         else
         {
-            left = std::stoull(lhs);
+            left = std::stoi(lhs);
         }
 
         if (rhs == "old")
@@ -100,45 +93,41 @@ std::function<bigint(bigint)> MonkeyFunctionFactory::makeMoreWorriedFunction(std
         }
         else
         {
-            right = std::stoull(rhs);
+            right = std::stoi(rhs);
         }
 
-        bigint result = 0;
+        // std::cout << "Halfway there...\n";
+        Item result = 0;
         switch (opSymbol[0])
         {
             case '+':
+                // std::cout << "Plus case...\n";
                 result = left + right;
                 break;
 
-            case '-':
-                result = left - right;
-                break;
-
             case '*':
+                // std::cout << "Times case...\n";
                 result = left * right;
-                break;
-
-            case '/':
-                result = left / right;
                 break;
             
             default:
                 break;
         }
-        if (lhs == "old" && result < left || rhs == "old" && result < right)
-        {
-            std::cout << "Overflow...\n" << left << opSymbol << right << "=" << result << "\n";
-        }
+        // if (lhs == "old" && result < left || rhs == "old" && result < right)
+        // {
+            // std::cout << "Overflow...\n" << left << opSymbol << right << "=" << result << "\n";
+        // }
+        // std::cout << "Returning now...\n";
         return result;
     };
 };
 
 
 
-std::function<bool(bigint)> MonkeyFunctionFactory::makeTestFunction(std::string input)
+std::function<bool(Item)> MonkeyFunctionFactory::makeTestFunction(std::string input)
 {
-    bigint divisor = std::stoull(input);
-    return [divisor] (bigint value) -> bool
+    int divisor = std::stoi(input);
+    return [divisor] (Item value) -> bool
     {
         return ((value / divisor) * divisor) == value;
     };
