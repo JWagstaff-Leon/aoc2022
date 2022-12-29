@@ -128,6 +128,6 @@ int main(int argc, char *argv[])
     }
 
     int answer = highest * secondHighest;
-    std::cout << answer << "\n";
+    std::cout << "Answer: " << answer << "\n";
     return 0;
 };
