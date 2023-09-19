@@ -3,3 +3,5 @@ input.txt
 *.exe
 .vscode
 day11/bigint
+a.out
+*test*
