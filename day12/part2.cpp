@@ -144,6 +144,48 @@ Coordinate findFirstInstance(unsigned char target, std::vector<std::vector<unsig
 
 
 
+std::vector<Coordinate> findAllInstances(unsigned char target, std::vector<std::vector<unsigned char>> nodes)
+{
+    std::vector<Coordinate> instances;
+
+    if(target == 'S')
+    {
+        target = 'a';
+    }
+
+    if(target == 'E')
+    {
+        target = 'z';
+    }
+
+    for(int y = 0; y < nodes.size(); y++)
+    {
+        for(int x = 0; x < nodes[y].size(); x++)
+        {
+            char currentNode = nodes[y][x];
+
+            if(currentNode == 'S')
+            {
+                currentNode = 'a';
+            }
+
+            if(currentNode == 'E')
+            {
+                currentNode = 'z';
+            }
+
+            if(nodes[y][x] == target)
+            {
+                instances.push_back(Coordinate(x, y));
+            }
+        }
+    }
+
+    return instances;
+};
+
+
+
 struct AStarNode
 {
     Coordinate coordinate;
@@ -231,7 +273,6 @@ std::vector<Coordinate> a_star(
     processQueue.push(startNode);
     inQueue.insert(startNode.coordinate);
 
-    int nodesProcessed = 0;
     while (!processQueue.empty())
     {
         AStarNode currentBest = processQueue.top();
@@ -271,14 +312,14 @@ std::vector<Coordinate> a_star(
             Coordinate neighbor(currentBest.coordinate.x() + x, currentBest.coordinate.y() + y);
 
             bool neighborInBoundsY = neighbor.y() >= 0 && neighbor.y() < nodes.size();
-            bool neighborInBounds = neighborInBoundsY && neighbor.x() >= 0 && neighbor.x() < nodes.at(neighbor.y()).size();
+            bool neighborInBounds = neighborInBoundsY && neighbor.x() >= 0 && neighbor.x() < nodes[neighbor.y()].size();
             if (!neighborInBounds)
             {
                 continue;
             }
 
-            unsigned char currentHeight = nodes.at(currentBest.coordinate.y()).at(currentBest.coordinate.x());
-            unsigned char neighborHeight = nodes.at(neighbor.y()).at(neighbor.x());
+            unsigned char currentHeight = nodes[currentBest.coordinate.y()][currentBest.coordinate.x()];
+            unsigned char neighborHeight = nodes[neighbor.y()][neighbor.x()];
             if (currentHeight == 'S')
             {
                 currentHeight = 'a';
@@ -307,7 +348,7 @@ std::vector<Coordinate> a_star(
             neighborNode.f = neighborNode.g + distanceFunc(neighborNode.coordinate, end);
             
             if (gScoresMap.find(neighborNode.coordinate) == gScoresMap.end() ||
-                neighborNode.g < gScoresMap.at(neighborNode.coordinate))
+                neighborNode.g < gScoresMap[neighborNode.coordinate])
             {
                 gScoresMap[neighborNode.coordinate] = neighborNode.g;
                 parentMap[neighborNode.coordinate] = currentBest.coordinate;
@@ -357,10 +398,10 @@ int main(int argc, char *argv[])
 
     fin.close();
 
-    Coordinate startPosition = findFirstInstance('S', nodes);
+    std::vector<Coordinate> startPositions = findAllInstances('a', nodes);
     Coordinate endPosition = findFirstInstance('E', nodes);
 
-    if (startPosition.x() < 0 || startPosition.y() < 0)
+    if (startPositions.size() == 0)
     {
         std::cout << "Error: could not find start position\n";
         return 0;
@@ -372,18 +413,34 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    std::vector<Coordinate> bestPath = a_star(startPosition, endPosition, nodes, &distanceFunc);
-
-    if (bestPath.size() < 1)
+    std::pair<Coordinate, uint32_t> best;
+    best.first = Coordinate(-1, -1);
+    best.second = 0;
+    best.second -= 1; // set distance to max
+    
+    std::vector<Coordinate> bestPath;
+    for(auto startPosition : startPositions)
     {
-        std::cout << "Error: Unable to find a path\n";
-        return 0;
+        std::vector<Coordinate> path = a_star(startPosition, endPosition, nodes, &distanceFunc);
+        uint32_t pathDistance = path.size();
+        if(pathDistance > 0 && pathDistance < best.second)
+        {
+            best.first = startPosition;
+            best.second = pathDistance;
+            // bestPath = path;
+            if(startPosition == Coordinate(0, 13))
+            {
+                bestPath = path;
+                // std::cout << startPosition << " = " << pathDistance << "\n";
+
+            }
+        }
     }
 
-    std::cout << "Answer: " << bestPath.size() << std::endl;
-    FILE* fout = fopen("output.ppm", "wb");
+    std::cout << "\nAnswer: " << best.first << " with length " << best.second << std::endl;
+    FILE* fout = fopen("best2.ppm", "wb");
 
-    fprintf(fout, "P6\n%d %d\n255\n", nodes.at(0).size(), nodes.size());
+    fprintf(fout, "P6\n%d %d\n255\n", nodes[0].size(), nodes.size());
     std::vector<std::vector<rgb>> image;
     for (uint32_t y = 0; y < nodes.size(); y++)
     {
