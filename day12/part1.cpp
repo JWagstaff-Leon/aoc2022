@@ -9,6 +9,76 @@
 #include <map>
 #include <string>
 
+typedef struct {
+    double r;       // a fraction between 0 and 1
+    double g;       // a fraction between 0 and 1
+    double b;       // a fraction between 0 and 1
+} rgb;
+
+typedef struct {
+    double h;       // angle in degrees
+    double s;       // a fraction between 0 and 1
+    double v;       // a fraction between 0 and 1
+} hsv;
+
+rgb hsv2rgb(hsv in)
+{
+    double      hh, p, q, t, ff;
+    long        i;
+    rgb         out;
+
+    if(in.s <= 0.0) {       // < is bogus, just shuts up warnings
+        out.r = in.v;
+        out.g = in.v;
+        out.b = in.v;
+        return out;
+    }
+    hh = in.h;
+    if(hh >= 360.0) hh = 0.0;
+    hh /= 60.0;
+    i = (long)hh;
+    ff = hh - i;
+    p = in.v * (1.0 - in.s);
+    q = in.v * (1.0 - (in.s * ff));
+    t = in.v * (1.0 - (in.s * (1.0 - ff)));
+
+    switch(i) {
+    case 0:
+        out.r = in.v;
+        out.g = t;
+        out.b = p;
+        break;
+    case 1:
+        out.r = q;
+        out.g = in.v;
+        out.b = p;
+        break;
+    case 2:
+        out.r = p;
+        out.g = in.v;
+        out.b = t;
+        break;
+
+    case 3:
+        out.r = p;
+        out.g = q;
+        out.b = in.v;
+        break;
+    case 4:
+        out.r = t;
+        out.g = p;
+        out.b = in.v;
+        break;
+    case 5:
+    default:
+        out.r = in.v;
+        out.g = p;
+        out.b = q;
+        break;
+    }
+    return out;     
+}
+
 class Coordinate
 {
     public:
@@ -47,7 +117,7 @@ bool operator< (const Coordinate& lhs, const Coordinate& rhs)
 
 std::ostream& operator<< (std::ostream& sout, Coordinate coord)
 {
-    sout << "(" << coord.y() + 1 << ", " << coord.x() + 1 << ")";
+    sout << "(" << coord.x() << ", " << coord.y() << ")";
     return sout;
 };
 
@@ -131,9 +201,9 @@ class FScoreCompare
         {
             if (gt_)
             {
-                return lhs.f > rhs.f;
+                return lhs.f < rhs.f;
             }
-            return lhs.f < rhs.f;
+            return lhs.f > rhs.f;
         };
 
     private:
@@ -141,7 +211,11 @@ class FScoreCompare
 };
 
 
-std::vector<Coordinate> a_star(Coordinate start, Coordinate end, std::vector<std::vector<unsigned char>> nodes, std::function<uint32_t(Coordinate, Coordinate)> distanceFunc)
+std::vector<Coordinate> a_star(
+    Coordinate start,
+    Coordinate end,
+    std::vector<std::vector<unsigned char>> nodes,
+    std::function<uint32_t(Coordinate, Coordinate)> distanceFunc)
 {
     std::map<Coordinate, Coordinate> parentMap;
 
@@ -307,11 +381,40 @@ int main(int argc, char *argv[])
     }
 
     std::cout << "Answer: " << bestPath.size() << std::endl;
-    std::cout << "Path:\n";
-    for (Coordinate coord : bestPath)
+    FILE* fout = fopen("output.ppm", "wb");
+
+    fprintf(fout, "P6\n%d %d\n255\n", nodes.at(0).size(), nodes.size());
+    std::vector<std::vector<rgb>> image;
+    for (uint32_t y = 0; y < nodes.size(); y++)
     {
-        std::cout << nodes.at(coord.y()).at(coord.x()) << " " << coord << std::endl;
+        std::vector<rgb> imageRow;
+        for (uint32_t x = 0; x < nodes[y].size(); x++)
+        {
+            hsv nodeHsv;
+            nodeHsv.h = (nodes[y][x] - 97) * 300.0 / 25.0;
+            nodeHsv.s = 1;
+            nodeHsv.v = 1;
+            imageRow.push_back(hsv2rgb(nodeHsv));
+        }
+        image.push_back(imageRow);
     }
+    for (Coordinate node : bestPath)
+    {
+        hsv pathHsv;
+        pathHsv.h = (nodes[node.y()][node.x()] - 97) * 300.0 / 25.0;
+        pathHsv.s = 1;
+        pathHsv.v = 0.5;
+        rgb pathRgb = hsv2rgb(pathHsv);
+        image[node.y()][node.x()] = pathRgb;
+    }
+    for (auto row : image)
+    {
+        for (auto pixel : row)
+        {
+            fprintf(fout, "%c%c%c", (uint8_t)(pixel.r * 255), (uint8_t)(pixel.g * 255), (uint8_t)(pixel.b * 255));
+        }
+    }
+    fclose(fout);
 
     return 0;
 }
