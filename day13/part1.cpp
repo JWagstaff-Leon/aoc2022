@@ -71,7 +71,6 @@ int main(int argc, char *argv[])
 
     while(!fin.eof())
     {
-        std::cout.flush();
         std::string list1String, list2String;
         std::getline(fin, list1String);
         std::getline(fin, list2String);
@@ -84,7 +83,7 @@ int main(int argc, char *argv[])
         }
         delete list1;
         delete list2;
-        
+
         std::getline(fin, list1String); // consume blank line
         index++;
     }
