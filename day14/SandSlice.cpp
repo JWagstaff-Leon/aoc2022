@@ -2,11 +2,25 @@
 
 #include <assert.h>
 #include <cstdint>
+#include <fstream>
 #include <utility>
 
 SandSlice::SandSlice(std::pair<int32_t, int32_t> sandSource)
 : sandSource_(sandSource), blockVoid_(false)
-{ /* Intentionally empty */ };
+, rockfout("rocks.h"), sandfout("sands.h")
+{
+    rockfout << "#include <vector>\n#include <utility>\n\nstd::vector<std::pair<int, int>> rocks = {\n";
+    sandfout << "#include <vector>\n#include <utility>\n\nstd::vector<std::pair<int, int>> sands = {\n";
+}
+
+SandSlice::~SandSlice()
+{
+    rockfout << "};\n";
+    sandfout << "};\n";
+
+    rockfout.close();
+    sandfout.close();
+}
 
 
 
@@ -57,7 +71,10 @@ void SandSlice::blockToCoord(std::pair<int32_t, int32_t> coord)
 
     for(int32_t x = x_from; x <= x_to; x++)
         for(int32_t y = y_from; y <= y_to; y++)
+        {
             slice_.block(std::pair<int32_t, int32_t>(x, y));
+            rockfout << "std::pair<int, int>(" << x << "," << y << "),\n";
+        }
     
     lastCoord_ = coord;
 };
@@ -119,7 +136,10 @@ std::pair<int32_t, int32_t> SandSlice::pourSand()
     }
 
     if(sandCoord.second <= lowestRock_ || blockVoid_)
+    {
         slice_.block(sandCoord);
+        sandfout << "std::pair<int, int>(" << sandCoord.first << "," << sandCoord.second << "),\n";
+    }
 
     return sandCoord;
 };
