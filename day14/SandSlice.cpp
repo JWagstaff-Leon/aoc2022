@@ -1,10 +1,11 @@
 #include "SandSlice.h"
 
+#include <assert.h>
 #include <cstdint>
 #include <utility>
 
 SandSlice::SandSlice(std::pair<int32_t, int32_t> sandSource)
-: sandSource_(sandSource)
+: sandSource_(sandSource), blockVoid_(false)
 { /* Intentionally empty */ };
 
 
@@ -19,8 +20,8 @@ void SandSlice::newRockAt(std::pair<int32_t, int32_t> coord)
 void SandSlice::blockToCoord(std::pair<int32_t, int32_t> coord)
 {
     if(lastCoord_.first != coord.first && lastCoord_.second != coord.second)
-        return;
-
+        assert(false);
+    
     int32_t y_from, y_to, x_from, x_to;
     if(lastCoord_.first == coord.first)
     {
@@ -51,6 +52,9 @@ void SandSlice::blockToCoord(std::pair<int32_t, int32_t> coord)
         }
     }
 
+    if(y_to > lowestRock_)
+        lowestRock_ = y_to;
+
     for(int32_t x = x_from; x <= x_to; x++)
         for(int32_t y = y_from; y <= y_to; y++)
             slice_.block(std::pair<int32_t, int32_t>(x, y));
@@ -59,7 +63,37 @@ void SandSlice::blockToCoord(std::pair<int32_t, int32_t> coord)
 };
 
 
+
 bool SandSlice::pourSandAndCheckSettles()
+{
+    std::pair<int32_t, int32_t> settleSpot = pourSand();
+    if(settleSpot.second > lowestRock_)
+        return false;
+
+    return true;
+};
+
+
+
+bool SandSlice::pourSandAndCheckSourceBlocked()
+{
+    std::pair<int32_t, int32_t> settleSpot = pourSand();
+    if(settleSpot == sandSource_)
+        return true;
+    
+    return false;
+};
+
+
+
+void SandSlice::setBlockVoid(bool shouldBlock)
+{
+    blockVoid_ = shouldBlock;
+};
+
+
+
+std::pair<int32_t, int32_t> SandSlice::pourSand()
 {
     std::pair<int32_t, int32_t> sandCoord = sandSource_;
 
@@ -69,8 +103,8 @@ bool SandSlice::pourSandAndCheckSettles()
 
     while(!slice_.isBlocked(below) || !slice_.isBlocked(left) || !slice_.isBlocked(right))
     {
-        if(slice_.isLowest(sandCoord))
-            return false; // sand fell past the lowest point without settling
+        if(sandCoord.second > lowestRock_)
+            break; // sand fell past the lowest point without settling
         
         if(!slice_.isBlocked(below))
             sandCoord = below;
@@ -84,6 +118,8 @@ bool SandSlice::pourSandAndCheckSettles()
         right = std::make_pair<int32_t, int32_t>(sandCoord.first + 1, sandCoord.second + 1);
     }
 
-    slice_.block(sandCoord);
-    return true; // sand settled
+    if(sandCoord.second <= lowestRock_ || blockVoid_)
+        slice_.block(sandCoord);
+
+    return sandCoord;
 };
