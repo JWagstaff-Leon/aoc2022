@@ -18,7 +18,10 @@ class Ranges
     public:
         uint32_t addRange(Range range);
         uint32_t addCenteredRange(int32_t center, uint32_t size);
+
         uint32_t count() const;
+        bool coversValue(int32_t value) const;
+        std::vector<Range> getGaps() const;
 
     private:
         std::vector<Range> ranges_;

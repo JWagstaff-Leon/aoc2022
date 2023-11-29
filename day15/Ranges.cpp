@@ -55,3 +55,25 @@ uint32_t Ranges::count() const
         total += range.second - range.first;
     return total;
 };
+
+
+
+bool Ranges::coversValue(int32_t value) const
+{
+    for(auto range : ranges_)
+        if(range.first <= value && value <= range.second)
+            return true;
+
+    return false;
+};
+
+
+
+std::vector<Range> Ranges::getGaps() const
+{
+    std::vector<Range> gaps;
+    for(int i = 0; i < ranges_.size() - 1; i++)
+        gaps.push_back(Range(ranges_[i].second + 1, ranges_[i + 1].first - 1));
+    
+    return gaps;
+};
