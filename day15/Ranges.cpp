@@ -7,40 +7,23 @@ using namespace range;
 
 uint32_t Ranges::addRange(Range newRange)
 {
-    std::vector<Range>::iterator startIt, endIt;
     uint32_t oldSize = count();
 
-    for(startIt = ranges_.begin(); startIt != ranges_.end(); startIt++)
+    for(auto it = ranges_.rbegin(); it != ranges_.rend(); it++)
     {
-        if(startIt->first <= newRange.first && newRange.first <= startIt->second)
-        {
-            newRange.first = startIt->first;
-            if(startIt->second > newRange.second)
-                newRange.second = startIt->second;
-            break;
-        }
-    }
-    
-    // check to make sure new range end isn't inside another range
-    for(endIt = startIt; endIt != ranges_.end(); endIt++)
-    {
-        if(endIt->first <= newRange.second && newRange.second <= endIt->second)
-        {
-            newRange.second = endIt->second;
-            break;
-        }
+        // match to start
+        if(it->first <= newRange.first && newRange.first <= it->second)
+            newRange.first = it->first;
+        
+        // match to end
+        if(it->first <= newRange.second && newRange.second <= it->second)
+            newRange.second = it->second;
+        
+        // remove overlap
+        if(newRange.first <= it->first && it->second <= newRange.second)
+            ranges_.erase(std::next(it).base());
     }
 
-    if(startIt != ranges_.end() && endIt != ranges_.end())
-        ranges_.erase(startIt, endIt);
-    else if(startIt != ranges_.end())
-    {
-        ranges_.erase(startIt);
-    }
-    else if(endIt != ranges_.end())
-    {
-        ranges_.erase(endIt);
-    }
     ranges_.push_back(newRange);
     std::sort(ranges_.begin(), ranges_.end(), RangeComparator);
 

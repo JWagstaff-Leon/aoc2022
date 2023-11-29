@@ -21,7 +21,12 @@ uint32_t taxiDistance(std::pair<int32_t, int32_t> p1, std::pair<int32_t, int32_t
 
 uint32_t apparentRangeSize(int32_t y1, int32_t y2, uint32_t size)
 {
-    return size - ((y1 > y2 ? y1 - y2 : y2 - y1 ) * 2);
+    uint32_t heightDifference = (y1 > y2 ? y1 - y2 : y2 - y1);
+    uint32_t sizeShrinkAmount = heightDifference * 2;
+    if(sizeShrinkAmount > size)
+        return 0;
+
+    return size - sizeShrinkAmount;
 };
 
 
@@ -51,7 +56,8 @@ int main(int argc, char *argv[])
 
         uint32_t distance = taxiDistance(sensor, beacon);
         uint32_t size = apparentRangeSize(sensor.second, 2000000, (distance * 2) + 1);
-        ranges.addCenteredRange(sensor.first, size);
+        if(size > 0)
+            ranges.addCenteredRange(sensor.first, size);
     }
     fin.close();
 

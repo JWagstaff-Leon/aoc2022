@@ -10,7 +10,7 @@ namespace range
 using Range = std::pair<int32_t, int32_t>;
 
 struct {
-    bool operator() (const Range& lhs, const Range& rhs) { return lhs.second < rhs.first; };
+    bool operator() (const Range& lhs, const Range& rhs) { return lhs.first < rhs.first; };
 } RangeComparator;
 
 class Ranges
@@ -20,8 +20,8 @@ class Ranges
         uint32_t addCenteredRange(int32_t center, uint32_t size);
         uint32_t count() const;
 
-    private:
         std::vector<Range> ranges_;
+    private:
 };
 
 } // range
