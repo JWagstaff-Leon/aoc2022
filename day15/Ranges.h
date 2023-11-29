@@ -20,8 +20,8 @@ class Ranges
         uint32_t addCenteredRange(int32_t center, uint32_t size);
         uint32_t count() const;
 
-        std::vector<Range> ranges_;
     private:
+        std::vector<Range> ranges_;
 };
 
 } // range
