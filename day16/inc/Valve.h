@@ -25,6 +25,7 @@ class Valve
 
 
 
-struct {
-    bool operator() (const Valve& lhs, const Valve& rhs) { return lhs.getName() < rhs.getName(); };
-} ValveComparator;
+struct ValveComparator
+{
+    bool operator() (const Valve& lhs, const Valve& rhs) const { return lhs.getName() < rhs.getName(); };
+};

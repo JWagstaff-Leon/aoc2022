@@ -5,24 +5,38 @@
 
 bool ValveMap::openValve(std::string valveName)
 {
-    auto valve = valves_.find(valveName);
-    bool found = valve != valves_.end();
-    if(found)
-        valve->open();
+    auto findResult = findValve(valveName);
+    if(findResult.second)
+        const_cast<Valve*>(&*findResult.first)->open();
 
-    return found;
+    return findResult.second;
 };
 
 
 
 bool ValveMap::closeValve(std::string valveName)
 {
-    auto valve = valves_.find(valveName);
-    bool found = valve != valves_.end();
-    if(found)
-        valve->close();
+    auto findResult = findValve(valveName);
+    if(findResult.second)
+        const_cast<Valve*>(&*findResult.first)->close();
 
-    return found;
+    return findResult.second;
+};
+
+
+
+bool ValveMap::isConnected(std::string valve1Name, std::string valve2Name) const
+{
+    for(auto connection : connections_)
+    {
+        if(connection.end1->getName() == valve1Name && connection.end2->getName() == valve2Name ||
+           connection.end1->getName() == valve2Name && connection.end2->getName() == valve1Name)
+        {
+           return true;
+        }
+    }
+
+    return false;
 };
 
 
@@ -37,17 +51,17 @@ bool ValveMap::addValve(std::string valveName, uint32_t flowRate)
 
 ConnectionAddResult ValveMap::addConnection(std::string valve1Name, std::string valve2Name)
 {
-    auto valve1 = valves_.find(valve1Name);
-    auto valve2 = valves_.find(valve2Name);
+    auto valve1Result = findValve(valve1Name);
+    auto valve2Result = findValve(valve2Name);
 
-    if(valve1 == valves_.end() && valve2 == valves_.end())
+    if(!valve1Result.second && !valve2Result.second)
         return ConnectionAddResult::INVALID_VALVE_BOTH;
-    if(valve1 == valves_.end())
+    if(!valve1Result.second)
         return ConnectionAddResult::INVALID_VALVE_1;
-    if(valve2 == valves_.end())
+    if(!valve2Result.second)
         return ConnectionAddResult::INVALID_VALVE_2;
 
-    Connection newConnection{&*valve1, &*valve2};
+    Connection newConnection{const_cast<Valve*>(&*valve1Result.first), const_cast<Valve*>(&*valve2Result.first)};
     auto result = connections_.insert(newConnection);
 
     return (result.second ? ConnectionAddResult::SUCCESS : ConnectionAddResult::ALREADY_EXISTS);
@@ -55,7 +69,7 @@ ConnectionAddResult ValveMap::addConnection(std::string valve1Name, std::string 
 
 
 
-uint32_t ValveMap::getTotalFlowRate() const
+uint32_t ValveMap::getOverallFlowRate() const
 {
     uint32_t total = 0;
 
@@ -63,4 +77,15 @@ uint32_t ValveMap::getTotalFlowRate() const
         total += valve.getCurrentFlowRate();
 
     return total;
+};
+
+
+
+std::pair<std::set<Valve>::iterator, bool> ValveMap::findValve(std::string valveName)
+{
+    for(auto it = valves_.begin(); it != valves_.end(); it++)
+        if(it->getName() == valveName)
+            return std::make_pair(std::move(it), true);
+    
+    return std::make_pair(valves_.end(), false);
 };

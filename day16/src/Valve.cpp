@@ -1,7 +1,7 @@
 #include "Valve.h"
 
 Valve::Valve(std::string name, uint32_t flowRate)
-: name_(name), flowRate_(flowRate) { /* Intentionally empty */ };
+: name_(name), flowRate_(flowRate), open_(false) { /* Intentionally empty */ };
 
 
 
@@ -40,7 +40,7 @@ uint32_t Valve::getFlowRate() const
 
 
 
-uint32_t getCurrentFlowRate() const
+uint32_t Valve::getCurrentFlowRate() const
 {
     return (isOpen() ? getFlowRate() : 0);
 };

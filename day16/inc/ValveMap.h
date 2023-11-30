@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <set>
 #include <string>
+#include <utility>
 
 #include "Connection.h"
 #include "Valve.h"
@@ -24,14 +25,16 @@ class ValveMap
         bool openValve(std::string valveName);
         bool closeValve(std::string valveName);
 
+        bool isConnected(std::string valve1Name, std::string valve2Name) const;
+
         bool addValve(std::string valveName, uint32_t flowRate);
         ConnectionAddResult addConnection(std::string valve1Name, std::string valve2Name);
 
-        uint32_t getTotalFlowRate() const;
+        uint32_t getOverallFlowRate() const;
 
     private:
         std::set<Valve, ValveComparator> valves_;
-        std::set<Connections, ConnectionComparator> connections_;
+        std::set<Connection, ConnectionComparator> connections_;
 
-        uint32_t totalFlow_;
+        std::pair<std::set<Valve>::iterator, bool> findValve(std::string valveName);
 };
